@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using Korn.Utils.Logger;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Korn.Utils.PEImageReader;
@@ -11,6 +12,8 @@ public unsafe class PEImage : IDisposable
         baseHandle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
         Base = (byte*)baseHandle.AddrOfPinnedObject();
         PEBase = Base + e_lfanew;
+
+        Verify();
     }
 
     GCHandle baseHandle;
@@ -90,6 +93,37 @@ public unsafe class PEImage : IDisposable
                 return rva - section->VirtualAddress + section->PointerToRawData;
         }
         return 0;
+    }
+
+    void Verify()
+    {
+        const ushort IMAGE_DOS_SIGNATURE = 0x5A4D;
+        const uint IMAGE_NT_SIGNATURE = 0x00004550;
+        const ushort IMAGE_NT_OPTIONAL_HDR64_MAGIC = 0x20b;
+
+        var dosSignature = *(ushort*)Base;
+        if (dosSignature != IMAGE_DOS_SIGNATURE)
+            throw new KornError([
+                "PEImage->Verify:",
+                "PE Image has invalid DOS signature.",
+                $"Signature: {dosSignature:X2}, expected:{IMAGE_DOS_SIGNATURE:X2}"
+            ]);
+
+        var peSignature = *(uint*)PEBase;
+        if (peSignature != IMAGE_NT_SIGNATURE)
+            throw new KornError([
+                "PEImage->Verify:",
+                "PE Image has invalid PE signature.",
+                $"Signature: {peSignature:X2}, expected:{IMAGE_NT_SIGNATURE:X2}"
+            ]);
+
+        if (OptionalHeader->Magic != IMAGE_NT_OPTIONAL_HDR64_MAGIC)
+            throw new KornError([
+                "PEImage->Verify:",
+                "PE Image has invalid optional header magic.",
+                $"Magic: {OptionalHeader->Magic:X2}, expected:{IMAGE_NT_OPTIONAL_HDR64_MAGIC:X2}",
+                "This may indicate that the file has the wrong bitness."
+            ]);
     }
 
     #region IDisposable

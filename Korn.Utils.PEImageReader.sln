@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35506.116 d17.12
+VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Utils.PEImageReader", "Korn.Utils.PEImageReader\Korn.Utils.PEImageReader.csproj", "{1622C972-6276-4310-9607-F5D6F399BD19}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{E52BAA2A-9287-4075-A925-FBAEA7A06C17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Korn", "Korn", "{12CF4080-B12C-436A-95C9-0C94C3AC77F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Utils.Logger", "..\Korn.Utils.Logger\Korn.Utils.Logger\Korn.Utils.Logger.csproj", "{6DCF29B7-6612-4572-B29C-8F53FC3F19E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Utils.System", "..\Korn.Utils.System\Korn.Utils.System\Korn.Utils.System.csproj", "{4815463A-F8BC-4B34-B4C7-B46F8B620B4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,8 +37,28 @@ Global
 		{E52BAA2A-9287-4075-A925-FBAEA7A06C17}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E52BAA2A-9287-4075-A925-FBAEA7A06C17}.Release|x64.ActiveCfg = Release|Any CPU
 		{E52BAA2A-9287-4075-A925-FBAEA7A06C17}.Release|x64.Build.0 = Release|Any CPU
+		{6DCF29B7-6612-4572-B29C-8F53FC3F19E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DCF29B7-6612-4572-B29C-8F53FC3F19E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DCF29B7-6612-4572-B29C-8F53FC3F19E6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6DCF29B7-6612-4572-B29C-8F53FC3F19E6}.Debug|x64.Build.0 = Debug|Any CPU
+		{6DCF29B7-6612-4572-B29C-8F53FC3F19E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DCF29B7-6612-4572-B29C-8F53FC3F19E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DCF29B7-6612-4572-B29C-8F53FC3F19E6}.Release|x64.ActiveCfg = Release|Any CPU
+		{6DCF29B7-6612-4572-B29C-8F53FC3F19E6}.Release|x64.Build.0 = Release|Any CPU
+		{4815463A-F8BC-4B34-B4C7-B46F8B620B4B}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{4815463A-F8BC-4B34-B4C7-B46F8B620B4B}.Debug|Any CPU.Build.0 = Debug|x64
+		{4815463A-F8BC-4B34-B4C7-B46F8B620B4B}.Debug|x64.ActiveCfg = Debug|x64
+		{4815463A-F8BC-4B34-B4C7-B46F8B620B4B}.Debug|x64.Build.0 = Debug|x64
+		{4815463A-F8BC-4B34-B4C7-B46F8B620B4B}.Release|Any CPU.ActiveCfg = Release|x64
+		{4815463A-F8BC-4B34-B4C7-B46F8B620B4B}.Release|Any CPU.Build.0 = Release|x64
+		{4815463A-F8BC-4B34-B4C7-B46F8B620B4B}.Release|x64.ActiveCfg = Release|x64
+		{4815463A-F8BC-4B34-B4C7-B46F8B620B4B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6DCF29B7-6612-4572-B29C-8F53FC3F19E6} = {12CF4080-B12C-436A-95C9-0C94C3AC77F0}
+		{4815463A-F8BC-4B34-B4C7-B46F8B620B4B} = {12CF4080-B12C-436A-95C9-0C94C3AC77F0}
 	EndGlobalSection
 EndGlobal
