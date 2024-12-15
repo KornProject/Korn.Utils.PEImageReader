@@ -1,4 +1,4 @@
-﻿using Korn.Utils.Logger;
+﻿using Korn;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -9,14 +9,14 @@ public unsafe class PEImage : IDisposable
 
     public PEImage(byte[] bytes)
     {
-        baseHandle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-        Base = (byte*)baseHandle.AddrOfPinnedObject();
+        handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+        Base = (byte*)handle.AddrOfPinnedObject();
         PEBase = Base + e_lfanew;
 
         Verify();
     }
 
-    GCHandle baseHandle;
+    GCHandle handle;
     public readonly byte* Base;
     public readonly byte* PEBase;
 
@@ -41,6 +41,9 @@ public unsafe class PEImage : IDisposable
     public NotImplementedImageDirectory* IATDirectory => (NotImplementedImageDirectory*)(Base + RvaToFileOffset(OptionalHeader->IAT.VirtualAddress));
     public NotImplementedImageDirectory* DelayImportDescriptorDirectory => (NotImplementedImageDirectory*)(Base + RvaToFileOffset(OptionalHeader->DelayImportDescriptor.VirtualAddress));
     public NotImplementedImageDirectory* CLRRuntimeHeaderDirectory => (NotImplementedImageDirectory*)(Base + RvaToFileOffset(OptionalHeader->CLRRuntimeHeader.VirtualAddress));
+
+    public ImageSectionHeader* GetSectionByNumber(int number) => SectionHeader + (number - 1);
+    public ImageSectionHeader* GetSectionByIndex(int index) => SectionHeader + index;
 
     public DebugSymbolsInfo? ReadDegubInfo()
     {
@@ -134,14 +137,21 @@ public unsafe class PEImage : IDisposable
             return;
         disposed = true;
 
-        baseHandle.Free();
+        handle.Free();
     }
 
     ~PEImage() => Dispose();
     #endregion
 }
 
-public record DebugSymbolsInfo(string Signature, uint Age, string Path);
+public record DebugSymbolsInfo(string Signature, uint Age, string Path)
+{
+    public string GetMicrosoftDebugSymbolsCacheUrl()
+    {
+        var fileName = System.IO.Path.GetFileName(Path);
+        return $"http://msdl.microsoft.com/download/symbols/{fileName}/{Signature + Age}/{fileName}";
+    }
+}
 
 public struct NotImplementedImageDirectory;
 

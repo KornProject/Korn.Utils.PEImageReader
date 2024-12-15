@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Korn.Utils.Logger\Korn.Utils.Logger\Korn.Utils.Logger.csproj" />
+    <ProjectReference Include="..\..\Korn.Logger\Korn.Logger\Korn.Logger.csproj" />
     <ProjectReference Include="..\..\Korn.Utils.System\Korn.Utils.System\Korn.Utils.System.csproj" />
   </ItemGroup>
 
