@@ -1,5 +1,4 @@
-﻿using Korn;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Korn.Utils.PEImageReader;
