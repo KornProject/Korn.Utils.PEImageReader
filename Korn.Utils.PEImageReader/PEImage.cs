@@ -114,7 +114,7 @@ namespace Korn.Utils.PEImageReader
                 throw new KornError(
                     "PEImage->Verify:",
                     "PE Image has invalid DOS signature.",
-                    $"Signature: {dosSignature:X2}, expected:{IMAGE_DOS_SIGNATURE:X2}"
+                    $"Signature: {dosSignature:X}, expected:{IMAGE_DOS_SIGNATURE:X}"
                 );
 
             var peSignature = *(uint*)PEBase;
@@ -122,14 +122,14 @@ namespace Korn.Utils.PEImageReader
                 throw new KornError(
                     "PEImage->Verify:",
                     "PE Image has invalid PE signature.",
-                    $"Signature: {peSignature:X2}, expected:{IMAGE_NT_SIGNATURE:X2}"
+                    $"Signature: {peSignature:X}, expected:{IMAGE_NT_SIGNATURE:X}"
                 );
 
             if (OptionalHeader->Magic != IMAGE_NT_OPTIONAL_HDR64_MAGIC)
                 throw new KornError(
                     "PEImage->Verify:",
                     "PE Image has invalid optional header magic.",
-                    $"Magic: {OptionalHeader->Magic:X2}, expected:{IMAGE_NT_OPTIONAL_HDR64_MAGIC:X2}",
+                    $"Magic: {OptionalHeader->Magic:X}, expected:{IMAGE_NT_OPTIONAL_HDR64_MAGIC:X}",
                     "This may indicate that the file has the wrong bitness."
                 );
         }
