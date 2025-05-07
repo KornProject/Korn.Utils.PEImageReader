@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Korn.Core\Korn.Core\Korn.Core.csproj" />
+    <ProjectReference Include="..\..\Korn.Utils.Memory\Korn.Utils.Memory\Korn.Utils.Memory.csproj" />
     <ProjectReference Include="..\Korn.Utils.PEImageReader\Korn.Utils.PEImageReader.csproj" />
   </ItemGroup>
 

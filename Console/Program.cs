@@ -1,8 +1,11 @@
-﻿using Korn.Utils.PEImageReader;
+﻿using Korn.Utils;
+using Korn.Utils.PEImageReader;
+using System.Diagnostics;
 using System.Net;
 
 unsafe
 {
+    /*
     using var pe = new PEImage(@"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.11\coreclr.dll");
 
     var debugInfo = pe.ReadDegubInfo()!;
@@ -18,4 +21,13 @@ unsafe
     new WebClient().DownloadFile(debugUrl, @"C:\a.pdb");
 
     _ = 3;
+    */
+
+    
+    var process = Process.GetProcessesByName("notepad")[0];
+    var processHandle = process.Handle;
+    var kernelHandle = (void*)0x7ff975790000;
+    var pe = new PERuntimeImage(processHandle, kernelHandle);
+
+    var addr = pe.GetExportFunctionAddress("Sleep");
 }
