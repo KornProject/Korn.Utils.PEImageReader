@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System;
+using System.Reflection;
 
 namespace Korn.Utils.PEImageReader
 {
@@ -79,8 +80,10 @@ namespace Korn.Utils.PEImageReader
 
             string ReadSignature(byte** address)
             {
-                var signature = UnsafeGuidParser.Parse(*address, out var read);
-                *address += read;
+                var bytes = Memory.Read(*address, sizeof(Guid));
+                var guid = new Guid(bytes);
+                var signature = guid.ToString("N").ToUpper();
+                *address += sizeof(Guid);
                 return signature;
             }
 

@@ -62,8 +62,10 @@ namespace Korn.Utils.PEImageReader
 
             string ReadSignature(Address* address)
             {
-                var signature = UnsafeGuidParser.Parse(memory, *address, out var read);
-                *address += read;
+                var bytes = memory.Read(*address, sizeof(Guid));
+                var guid = new Guid(bytes);
+                var signature = guid.ToString("N").ToUpper();
+                *address += sizeof(Guid);
                 return signature;
             }
 
