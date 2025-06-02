@@ -4,14 +4,14 @@ static unsafe class UnsafeGuidParser
 {
     const int GuidSize = 16;
 
-    public static string Parse(ExternalMemory memory, Address adress, out int read)
+    public static string Parse(ProcessMemory memory, Address adress, out int read)
     {
         read = GuidSize;
         var byteArray = memory.Read(adress, GuidSize);
         return Parse(byteArray);
     }
 
-    public static string Parse(ExternalMemory memory, Address adress)
+    public static string Parse(ProcessMemory memory, Address adress)
     {
         var byteArray = memory.Read(adress, GuidSize);
         return Parse(byteArray);

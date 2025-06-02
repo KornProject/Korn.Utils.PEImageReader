@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Core", "..\Korn.Core\K
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Utils.Memory", "..\Korn.Utils.Memory\Korn.Utils.Memory\Korn.Utils.Memory.csproj", "{95933978-97AD-4B37-8677-51CCFD46AC33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Utils.Process", "..\Korn.Utils.Process\Korn.Utils.Process\Korn.Utils.Process.csproj", "{58996AC8-C4C7-4F2B-9A87-FE506543AD0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Utils.Algorithms", "..\Korn.Utils.Algorithms\Korn.Utils.Algorithms\Korn.Utils.Algorithms.csproj", "{E8A6C5D5-C59F-4A6B-8125-0D41C833BBFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -26,6 +30,10 @@ Global
 		{64CD0E3E-9916-4047-876D-0219E20AB74D}.Debug|x64.Build.0 = Debug|x64
 		{95933978-97AD-4B37-8677-51CCFD46AC33}.Debug|x64.ActiveCfg = Debug|x64
 		{95933978-97AD-4B37-8677-51CCFD46AC33}.Debug|x64.Build.0 = Debug|x64
+		{58996AC8-C4C7-4F2B-9A87-FE506543AD0A}.Debug|x64.ActiveCfg = Debug|x64
+		{58996AC8-C4C7-4F2B-9A87-FE506543AD0A}.Debug|x64.Build.0 = Debug|x64
+		{E8A6C5D5-C59F-4A6B-8125-0D41C833BBFD}.Debug|x64.ActiveCfg = Debug|x64
+		{E8A6C5D5-C59F-4A6B-8125-0D41C833BBFD}.Debug|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -33,5 +41,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{64CD0E3E-9916-4047-876D-0219E20AB74D} = {12CF4080-B12C-436A-95C9-0C94C3AC77F0}
 		{95933978-97AD-4B37-8677-51CCFD46AC33} = {12CF4080-B12C-436A-95C9-0C94C3AC77F0}
+		{58996AC8-C4C7-4F2B-9A87-FE506543AD0A} = {12CF4080-B12C-436A-95C9-0C94C3AC77F0}
+		{E8A6C5D5-C59F-4A6B-8125-0D41C833BBFD} = {12CF4080-B12C-436A-95C9-0C94C3AC77F0}
 	EndGlobalSection
 EndGlobal

@@ -8,9 +8,9 @@ namespace Korn.Utils.PEImageReader
 {
     public unsafe class PERuntimeImage
     {
-        public PERuntimeImage(IntPtr processHandle, Address pointer) : this(*(ExternalMemory*)&processHandle, pointer) { }
+        public PERuntimeImage(IntPtr processHandle, Address pointer) : this(*(ProcessMemory*)&processHandle, pointer) { }
 
-        public PERuntimeImage(ExternalMemory memory, Address pointer)
+        public PERuntimeImage(ProcessMemory memory, Address pointer)
         {
             this.memory = memory;
             Pointer = pointer;
@@ -25,7 +25,7 @@ namespace Korn.Utils.PEImageReader
             SectionHeaderAddress = fileHeaderPointer + sizeof(ImageFileHeader) + FileHeader.SizeOfOptionalHeader;
         }
 
-        ExternalMemory memory;
+        ProcessMemory memory;
         public readonly Address Pointer;
 
         public ImageOptionalHeader64 OptionalHeader;
@@ -111,5 +111,46 @@ namespace Korn.Utils.PEImageReader
         public ImageSectionHeader GetSectionByNumber(int number) => GetSectionByIndex(number - 1);
 
         public ImageSectionHeader GetSectionByIndex(int index) => memory.Read<ImageSectionHeader>(SectionHeaderAddress + index * sizeof(ImageSectionHeader));
+
+        public class Cache
+        {
+            public Cache(Process process)
+            {
+                var memory = process.Memory;
+                var moduleHandle = process.Handle;
+                pe = new PERuntimeImage(memory, (void*)(IntPtr)moduleHandle);
+
+                var functionCount = pe.ExportFunctionsCount;
+                functions = new Function[functionCount];
+                for (var index = 0; index < functionCount; index++)
+                {
+                    var nameRva = pe.GetExportFunctionNameRva(index);
+                    var name = pe.GetNameOfExportFunction(nameRva);
+                    var rva = pe.GetExportFunctionRva(index);
+                    functions[index] = new Function(name, rva);
+                }
+            }
+
+            PERuntimeImage pe;
+            Function[] functions;
+
+            public uint GetFunctionRva(string name)
+            {
+                var hash = HashedString.CalculateHash(name);
+                foreach (var function in functions)
+                    if (function.Name.Hash == hash)
+                        return function.RVA;
+                return 0;
+            }
+
+            struct Function
+            {
+                public Function(string name, uint rva) : this(new HashedString(name), rva) { }
+                public Function(HashedString name, uint rva) => (Name, RVA) = (name, rva);
+
+                public HashedString Name;
+                public uint RVA;
+            }
+        }
     }
 }

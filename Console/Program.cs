@@ -24,7 +24,7 @@ unsafe
     */
 
     
-    var process = Process.GetProcessesByName("notepad")[0];
+    var process = System.Diagnostics.Process.GetProcessesByName("notepad")[0];
     var processHandle = process.Handle;
     var kernelHandle = (void*)0x7ff975790000;
     var pe = new PERuntimeImage(processHandle, kernelHandle);
