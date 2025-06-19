@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Korn.Modules.Algorithms;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -8,31 +9,31 @@ namespace Korn.Utils.PEImageReader
 {
     public unsafe class PERuntimeImage
     {
-        public PERuntimeImage(IntPtr processHandle, Address pointer) : this(*(ProcessMemory*)&processHandle, pointer) { }
+        public PERuntimeImage(IntPtr processHandle, IntPtr pointer) : this(*(ProcessMemory*)&processHandle, pointer) { }
 
-        public PERuntimeImage(ProcessMemory memory, Address pointer)
+        public PERuntimeImage(ProcessMemory memory, IntPtr pointer)
         {
             this.memory = memory;
-            Pointer = pointer;
+            Pointer = (long)pointer;
 
-            var e_lfanew = memory.Read<uint>(Pointer + 0x3C);
+            var e_lfanew = memory.Read<uint>((IntPtr)(Pointer + 0x3C));
             var fileHeaderPointer = Pointer + e_lfanew + 4;
 
-            OptionalHeader = memory.Read<ImageOptionalHeader64>(Pointer + e_lfanew + 4 + 20);
-            FileHeader = memory.Read<ImageFileHeader>(fileHeaderPointer);
-            ExportDirectory = memory.Read<ImageExportDirectory>(Pointer + OptionalHeader.ExportTable.VirtualAddress);
-            DebugDirectory = memory.Read<ImageDebugDirectory>(Pointer + OptionalHeader.Debug.VirtualAddress);
+            OptionalHeader = memory.Read<ImageOptionalHeader64>((IntPtr)(Pointer + e_lfanew + 4 + 20));
+            FileHeader = memory.Read<ImageFileHeader>((IntPtr)(fileHeaderPointer));
+            ExportDirectory = memory.Read<ImageExportDirectory>((IntPtr)(Pointer + OptionalHeader.ExportTable.VirtualAddress));
+            DebugDirectory = memory.Read<ImageDebugDirectory>((IntPtr)(Pointer + OptionalHeader.Debug.VirtualAddress));
             SectionHeaderAddress = fileHeaderPointer + sizeof(ImageFileHeader) + FileHeader.SizeOfOptionalHeader;
         }
 
         ProcessMemory memory;
-        public readonly Address Pointer;
+        public readonly long Pointer;
 
         public ImageOptionalHeader64 OptionalHeader;
         public ImageFileHeader FileHeader;
         public ImageExportDirectory ExportDirectory;
         public ImageDebugDirectory DebugDirectory;
-        public Address SectionHeaderAddress;
+        public long SectionHeaderAddress;
 
         public uint ExportFunctionsCount => ExportDirectory.NumberOfNames;
 
@@ -53,41 +54,41 @@ namespace Korn.Utils.PEImageReader
                 return new DebugSymbolsInfo(signature, age, path);
             }
 
-            uint ReadTypeSignature(Address* address)
+            uint ReadTypeSignature(long* address)
             {
-                var typeSignature = memory.Read<uint>(*address);
+                var typeSignature = memory.Read<uint>((IntPtr)(*address));
                 *address += sizeof(uint);
                 return typeSignature;
             }
 
-            string ReadSignature(Address* address)
+            string ReadSignature(long* address)
             {
-                var bytes = memory.Read(*address, sizeof(Guid));
+                var bytes = memory.Read((IntPtr)(*address), sizeof(Guid));
                 var guid = new Guid(bytes);
                 var signature = guid.ToString("N").ToUpper();
                 *address += sizeof(Guid);
                 return signature;
             }
 
-            uint ReadAge(Address* address)
+            uint ReadAge(long* address)
             {
-                var age = memory.Read<uint>(*address);
+                var age = memory.Read<uint>((IntPtr)(*address));
                 *address += sizeof(uint);
                 return age;
             }
 
-            string ReadPath(Address address) => memory.ReadUTF8(address);
+            string ReadPath(long address) => memory.ReadUTF8((IntPtr)address);
         }
 
-        public Address GetExportFunctionAddress(string name) => Pointer + GetEATFunction(name);
+        public IntPtr GetExportFunctionAddress(string name) => (IntPtr)(Pointer + (long)GetEATFunction(name));
 
-        public Address GetExportFunctionAddress(int index) => Pointer + GetExportFunctionRva(index);
+        public IntPtr GetExportFunctionAddress(int index) => (IntPtr)(Pointer + (long)GetExportFunctionRva(index));
 
-        public uint GetExportFunctionRva(int index) => memory.Read<uint>(Pointer + ExportDirectory.AddressOfFunctions + index * sizeof(uint));
+        public uint GetExportFunctionRva(int index) => memory.Read<uint>((IntPtr)(Pointer + ExportDirectory.AddressOfFunctions + index * sizeof(uint)));
 
-        public uint GetExportFunctionNameRva(int index) => memory.Read<uint>(Pointer + ExportDirectory.AddressOfNames + index * sizeof(uint));
+        public uint GetExportFunctionNameRva(int index) => memory.Read<uint>((IntPtr)(Pointer + ExportDirectory.AddressOfNames + index * sizeof(uint)));
 
-        public string GetNameOfExportFunction(uint nameRva) => memory.ReadUTF8(Pointer + nameRva);
+        public string GetNameOfExportFunction(uint nameRva) => memory.ReadUTF8((IntPtr)(Pointer + nameRva));
 
         uint GetEATFunction(string name)
         {
@@ -112,7 +113,7 @@ namespace Korn.Utils.PEImageReader
 
         public ImageSectionHeader GetSectionByNumber(int number) => GetSectionByIndex(number - 1);
 
-        public ImageSectionHeader GetSectionByIndex(int index) => memory.Read<ImageSectionHeader>(SectionHeaderAddress + index * sizeof(ImageSectionHeader));
+        public ImageSectionHeader GetSectionByIndex(int index) => memory.Read<ImageSectionHeader>((IntPtr)(SectionHeaderAddress + index * sizeof(ImageSectionHeader)));
 
         public class Cache
         {
@@ -120,7 +121,7 @@ namespace Korn.Utils.PEImageReader
             {
                 var memory = process.Memory;
                 var moduleHandle = process.Handle;
-                pe = new PERuntimeImage(memory, (void*)(IntPtr)moduleHandle);
+                pe = new PERuntimeImage(memory, (IntPtr)moduleHandle);
 
                 var functionCount = pe.ExportFunctionsCount;
                 functions = new Function[functionCount];

@@ -1,9 +1,7 @@
 ﻿using System.Runtime.InteropServices;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System;
-using System.Reflection;
+using Korn.Logger;
 
 namespace Korn.Utils.PEImageReader
 {
